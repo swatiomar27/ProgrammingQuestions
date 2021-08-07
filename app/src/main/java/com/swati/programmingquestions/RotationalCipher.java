@@ -28,24 +28,34 @@ public class RotationalCipher {
     public static StringBuffer encrypt(String text, int rotationalShift) {
         StringBuffer result = new StringBuffer();
 
-        for (int i = 0; i < text.length(); i++) {
-            if (Character.isDigit(text.charAt(i))) {
-                char ch = (char) (((int) text.charAt(i) +
-                        rotationalShift - 48) % 10 + 48);
-                result.append(ch);
-            } else if (Character.isUpperCase(text.charAt(i))) {
-                char ch = (char) (((int) text.charAt(i) +
-                        rotationalShift - 65) % 26 + 65);
-                result.append(ch);
-            } else if (Character.isLowerCase(text.charAt(i))) {
-                char ch = (char) (((int) text.charAt(i) +
-                        rotationalShift - 97) % 26 + 97);
-                result.append(ch);
+        for (int index = 0; index < text.length(); index++) {
+            if (Character.isDigit(text.charAt(index))) {
+                result.append(rotationCipherLogic(index, text, rotationalShift, 48, 10));
+            } else if (Character.isUpperCase(text.charAt(index))) {
+                result.append(rotationCipherLogic(index, text, rotationalShift, 65, 26));
+            } else if (Character.isLowerCase(text.charAt(index))) {
+                result.append(rotationCipherLogic(index, text, rotationalShift, 97, 26));
             } else {
-                result.append(text.charAt(i));
+                result.append(text.charAt(index));
             }
         }
         return result;
+    }
+
+    /**
+     * @param index           index start from 0 to text.length-1
+     * @param text            String that we have to encrypt
+     * @param rotationalShift int number replaced with rotationalShift digits higher (wrapping
+     *                        around from 9 to 0)
+     * @param startAscii      Ascii value of character or digit (e.g. 0 -> 48, A -> 65, a -> 97)
+     * @param totalLength     length of characters or digits (e.g. numbers -> 10 (0-9),
+     *                        characters -> 26 (A-Z | a-z))
+     * @return encrypted character
+     */
+    private static char rotationCipherLogic(int index, String text, int rotationalShift,
+                                            int startAscii, int totalLength) {
+        return (char) (((int) text.charAt(index) +
+                rotationalShift - startAscii) % totalLength + startAscii);
     }
 }
 
